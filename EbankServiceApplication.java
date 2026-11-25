@@ -1,0 +1,33 @@
+package mundia.amine.ebankservice;
+
+import mundia.amine.ebankservice.entities.BankAccount;
+import mundia.amine.ebankservice.service.EbankService;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+@EnableFeignClients
+public class EbankServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EbankServiceApplication.class, args);
+    }
+
+    @Bean
+    CommandLineRunner commandLineRunner(EbankService ebankService) {
+        return args -> {
+            for (int i = 1; i <= 3; i++){
+                for (int j = 0 ; j < 5; j++ ) {
+                    ebankService.saveBankAccount(BankAccount.builder()
+                                    .type(Math.random()>0.5? "Current Account":"Saving Account")
+                                    .balance(1000+ Math.random()*60000)
+                                    .customerId((long)i)
+                            .build());
+                }
+            }
+        };
+    }
+}
